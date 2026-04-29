@@ -1,0 +1,43 @@
+{
+  "product": "AgentOS",
+  "release_target": "prod-grade-v1",
+  "gates": {
+    "golden_path": [
+      "install_desktop_app",
+      "launch_app",
+      "connect_local_project",
+      "run_project_scan",
+      "create_task_from_thread_input",
+      "generate_plan",
+      "review_plan",
+      "approve_or_request_rework",
+      "run_verification",
+      "save_and_reopen_task"
+    ],
+    "quality": [
+      "lint_passes",
+      "typecheck_passes",
+      "build_passes",
+      "smoke_tests_pass"
+    ],
+    "ux": [
+      "guided_mode_reduces_complexity",
+      "mission_and_phase_are_obvious",
+      "approval_and_risk_are_visible",
+      "bottom_conversation_dock_is_context_aware"
+    ],
+    "safety": [
+      "safe_defaults",
+      "no_silent_irreversible_actions",
+      "sandbox_status_visible",
+      "approval_required_for_risky_actions"
+    ],
+    "operations": [
+      "release_checklist_exists",
+      "known_issues_documented",
+      "rollback_documented",
+      "support_debug_guidance_exists"
+    ]
+  },
+  "definition_of_done_rule": "All critical product, quality, safety, and operations gates must be green before prod-grade-v1 can be declared complete."
+}

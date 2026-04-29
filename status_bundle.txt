@@ -1,0 +1,5 @@
+PROJECT: AgentOS
+STATE: phase 1-7 pre-prod slice implemented in v3 package
+CURRENT UI DIRECTION: Codex-style threads + operational right rail + bottom chat dock
+TRUTH: workspace typecheck, build, lint/static gates, smoke tests, and local desktop packaging pass; desktop shell supports project selection, read-only scan, task listing/save, last-project reopen, approve/rework review actions, whitelisted read-only typecheck/build/test verification, command evidence, gated done state, atomic task writes, protected path checks, verification audit logs, CI workflow, release checklist, rollback docs, support/debug docs, known issues, and a constrained artifact-only apply path
+NEXT BEST STEP: manually exercise the golden path and packaged app on a clean Windows machine, then decide installer signing/auto-update policy

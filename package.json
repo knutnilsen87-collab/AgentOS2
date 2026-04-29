@@ -1,0 +1,26 @@
+{
+  "name": "agentos-starter-repo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop-first agentic project operating system starter repo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace @agentos/desktop",
+    "build": "npm run build --workspaces --if-present",
+    "package:desktop": "npm run build && npm run package --workspace @agentos/desktop",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "node --test tests/static/*.test.mjs",
+    "test": "node --test tests/smoke/*.test.mjs",
+    "doctor": "powershell -ExecutionPolicy Bypass -File ./scripts/doctor.ps1",
+    "setup:dev": "powershell -ExecutionPolicy Bypass -File ./scripts/setup-dev.ps1",
+    "status:update": "powershell -ExecutionPolicy Bypass -File ./scripts/update-status-bundle.ps1",
+    "codex:first-run": "powershell -ExecutionPolicy Bypass -File ./scripts/codex-first-run.ps1"
+  }
+}

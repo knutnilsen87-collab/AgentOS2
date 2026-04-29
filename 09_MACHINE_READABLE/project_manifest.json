@@ -1,0 +1,28 @@
+{
+  "project": {
+    "name": "AgentOS",
+    "phase": "phase-1-starter-repo",
+    "status": "scaffolded_not_verified",
+    "owner": "Echo / Norwegian Steel"
+  },
+  "stack": {
+    "workspace": "npm workspaces",
+    "desktop": "Electron + React + TypeScript",
+    "persistence": "filesystem under .agentos",
+    "platform_target": "Windows-first"
+  },
+  "packages": [
+    "@agentos/shared-types",
+    "@agentos/policy-engine",
+    "@agentos/task-engine",
+    "@agentos/project-scanner",
+    "@agentos/task-store",
+    "@agentos/status-bundle"
+  ],
+  "next_actions": [
+    "install dependencies",
+    "verify typecheck and build",
+    "launch desktop shell",
+    "implement first vertical slice"
+  ]
+}
