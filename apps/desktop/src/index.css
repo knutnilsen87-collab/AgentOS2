@@ -164,3 +164,152 @@ button:disabled { cursor: not-allowed; opacity: 0.48; }
   .hero-card { grid-template-columns: 1fr; }
   .summary-grid, .review-grid { grid-template-columns: 1fr; }
 }
+
+html[data-theme="light"] {
+  color-scheme: light;
+  background: #eef0f3;
+  color: #172033;
+}
+
+html[data-theme="light"] body {
+  background: #eef0f3;
+  color: #172033;
+}
+
+.app-shell--light {
+  background: #eef0f3;
+  color: #172033;
+}
+
+.app-shell--light .top-status-bar,
+.app-shell--light .left-rail,
+.app-shell--light .center-canvas,
+.app-shell--light .right-rail-shell,
+.app-shell--light .bottom-conversation-dock,
+.app-shell--light .runtime-dock,
+.app-shell--light .content-card,
+.app-shell--light .hero-card,
+.app-shell--light .constraint-strip {
+  border-color: rgba(31, 42, 64, 0.10);
+  background: rgba(255, 255, 255, 0.76);
+  color: #172033;
+}
+
+.app-shell--light .center-canvas,
+.app-shell--light .left-rail,
+.app-shell--light .right-rail-shell,
+.app-shell--light .bottom-conversation-dock,
+.app-shell--light .runtime-dock {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+.app-shell--light .eyebrow,
+.app-shell--light .rail-label,
+.app-shell--light .summary-label,
+.app-shell--light .top-subtitle,
+.app-shell--light .hero-copy,
+.app-shell--light .muted-copy,
+.app-shell--light .dock-context-strip,
+.app-shell--light .runtime-dock,
+.app-shell--light .thread-item-button span,
+.app-shell--light .patch-item span,
+.app-shell--light .plan-list p,
+.app-shell--light .thread-event-meta {
+  color: #667085;
+}
+
+.app-shell--light .status-pill,
+.app-shell--light .profile-toggle,
+.app-shell--light .composer-mode-chip,
+.app-shell--light .example-chip,
+.app-shell--light .dock-chip {
+  border-color: rgba(31, 42, 64, 0.12);
+  background: rgba(255, 255, 255, 0.70);
+  color: #24314a;
+}
+
+.app-shell--light .status-pill--accent {
+  background: rgba(64, 91, 216, 0.10);
+  color: #263d9e;
+}
+
+.app-shell--light .status-pill--success {
+  background: rgba(16, 168, 106, 0.12);
+  color: #067647;
+}
+
+.app-shell--light .status-pill--warning {
+  background: rgba(214, 150, 25, 0.14);
+  color: #8a5a00;
+}
+
+.app-shell--light .status-pill--danger {
+  background: rgba(192, 71, 71, 0.12);
+  color: #a33a3a;
+}
+
+.app-shell--light .project-card,
+.app-shell--light .thread-item,
+.app-shell--light .dock-thread-line,
+.app-shell--light .verification-item,
+.app-shell--light .summary-grid > div,
+.app-shell--light .review-grid > div,
+.app-shell--light .thread-event,
+.app-shell--light .plan-list li,
+.app-shell--light .assumptions-box,
+.app-shell--light .patch-item {
+  border-color: rgba(31, 42, 64, 0.10);
+  background: rgba(248, 250, 252, 0.86);
+}
+
+.app-shell--light .mission-composer.content-card {
+  background: #ffffff;
+  border-color: rgba(64, 91, 216, 0.22);
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+}
+
+.app-shell--light .hero-card {
+  background: rgba(255, 255, 255, 0.62);
+  border-color: rgba(31, 42, 64, 0.08);
+}
+
+.app-shell--light .next-action-box {
+  background: rgba(64, 91, 216, 0.07);
+  border-color: rgba(64, 91, 216, 0.14);
+}
+
+.app-shell--light .mission-textarea,
+.app-shell--light .dock-input {
+  border-color: rgba(31, 42, 64, 0.14);
+  background: #ffffff;
+  color: #172033;
+}
+
+.app-shell--light .secondary-rail-button,
+.app-shell--light .button-secondary {
+  border-color: rgba(31, 42, 64, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  color: #24314a;
+}
+
+.app-shell--light .primary-rail-button,
+.app-shell--light .button-primary,
+.app-shell--light .dock-send-button {
+  background: #405bd8;
+  color: #ffffff;
+}
+
+.app-shell--light .command-log-box,
+.app-shell--light .patch-item pre {
+  border-color: rgba(31, 42, 64, 0.10);
+  background: #f6f8fb;
+  color: #344054;
+}
+
+.app-shell--light .thread-event--user {
+  background: rgba(64, 91, 216, 0.08);
+}
+
+.app-shell--light .rail-card--quiet {
+  background: rgba(248, 250, 252, 0.72);
+}

@@ -7,10 +7,12 @@ interface Props {
   approvalMode: ApprovalMode;
   risk: TaskRiskLevel;
   profile: UiDisplayProfile;
+  theme: 'dark' | 'light';
   onToggleProfile: () => void;
+  onToggleTheme: () => void;
 }
 
-export function TopStatusBar({ projectName, phase, approvalMode, risk, profile, onToggleProfile }: Props) {
+export function TopStatusBar({ projectName, phase, approvalMode, risk, profile, theme, onToggleProfile, onToggleTheme }: Props) {
   const riskTone = risk === 'high' ? 'danger' : risk === 'medium' ? 'warning' : 'success';
   const showRisk = risk !== 'low';
 
@@ -27,6 +29,9 @@ export function TopStatusBar({ projectName, phase, approvalMode, risk, profile, 
         {showRisk ? <StatusPill tone={riskTone}>Risk: {risk}</StatusPill> : null}
         <button className="profile-toggle" onClick={onToggleProfile} type="button">
           {profile === 'guided' ? 'Guided mode' : 'Advanced mode'}
+        </button>
+        <button className="profile-toggle" onClick={onToggleTheme} type="button">
+          {theme === 'light' ? 'Light mode' : 'Dark mode'}
         </button>
       </div>
     </header>

@@ -157,6 +157,7 @@ function createThreadFromRecord(record: TaskRecord, projectSummary: ProjectSumma
 
 export function App() {
   const [profile, setProfile] = useState<UiDisplayProfile>(defaultProfile);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [phase, setPhase] = useState<UiPhase>('onboarding');
   const [prompt, setPrompt] = useState(defaultPrompt);
   const [approvalMode, setApprovalMode] = useState<ApprovalMode>(defaultApprovalMode);
@@ -177,6 +178,10 @@ export function App() {
   const sandboxStatus = 'Policy-gated, not OS-isolated';
   const writePolicy = 'Review required; no silent apply';
   const shellPolicy = 'No free shell; whitelist only';
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   function appendChatMessage(role: ThreadMessage['role'], text: string, kind: ThreadMessage['kind'] = 'message') {
     const message: ThreadMessage = {
@@ -657,14 +662,16 @@ export function App() {
   }
 
   return (
-    <div className={`app-shell app-shell--${profile}`}>
+    <div className={`app-shell app-shell--${profile} app-shell--${theme}`}>
       <TopStatusBar
         projectName={projectName}
         phase={phase}
         approvalMode={approvalMode}
         risk={thread.risk}
         profile={profile}
+        theme={theme}
         onToggleProfile={() => setProfile((current) => (current === 'guided' ? 'advanced' : 'guided'))}
+        onToggleTheme={() => setTheme((current) => (current === 'light' ? 'dark' : 'light'))}
       />
 
       <main className="workspace-layout">
