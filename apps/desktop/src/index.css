@@ -51,6 +51,35 @@ h3 { font-size: 18px; font-weight: 650; letter-spacing: 0; }
   display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 12px;
   border: 1px solid rgba(255,255,255,0.055); background: rgba(255,255,255,0.026); color: #cbd5e8;
 }
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.075);
+  background: rgba(255,255,255,0.04);
+  color: #d9e2f4;
+  cursor: pointer;
+}
+.theme-toggle-icon,
+.theme-toggle svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+}
+.theme-toggle svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.theme-toggle svg circle,
+.theme-toggle svg path:first-child {
+  fill: currentColor;
+}
 .status-pill--accent { background: rgba(76, 106, 255, 0.12); }
 .status-pill--success { background: rgba(16, 168, 106, 0.18); }
 .status-pill--warning { background: rgba(214, 150, 25, 0.18); }
@@ -226,6 +255,13 @@ html[data-theme="light"] body {
   border-color: rgba(31, 42, 64, 0.12);
   background: rgba(255, 255, 255, 0.70);
   color: #24314a;
+}
+
+.app-shell--light .theme-toggle {
+  border-color: rgba(31, 42, 64, 0.14);
+  background: #ffffff;
+  color: #344054;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
 }
 
 .app-shell--light .status-pill--accent {
