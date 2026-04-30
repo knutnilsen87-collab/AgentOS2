@@ -38,6 +38,7 @@ export function TopStatusBar({ projectName, phase, approvalMode, risk, profile, 
           aria-label={`Switch to ${nextTheme} mode`}
           title={`Switch to ${nextTheme} mode`}
         >
+          <span className="theme-toggle-label">{theme === 'light' ? 'Light' : 'Dark'}</span>
           <span className="theme-toggle-icon" aria-hidden="true">
             {theme === 'light' ? (
               <svg viewBox="0 0 24 24" focusable="false">
