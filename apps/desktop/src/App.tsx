@@ -38,6 +38,9 @@ interface ProjectOpenResult {
 
 interface OpenAiChatResult {
   text: string;
+  kind?: ThreadMessage['kind'];
+  risk?: 'low' | 'medium' | 'high';
+  nextActions?: string[];
   model: string;
   responseId: string | null;
 }
@@ -210,7 +213,7 @@ export function App() {
         projectSummary,
         thread
       });
-      appendChatMessage('agent', result.text);
+      appendChatMessage('agent', result.text, result.kind ?? 'message');
       setRuntimeMessage(`OpenAI response received from ${result.model}.`);
     } catch (error) {
       const lower = trimmed.toLowerCase();

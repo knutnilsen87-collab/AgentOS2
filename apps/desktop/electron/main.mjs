@@ -4,6 +4,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
+import { chatWithOpenAi, loadDotEnv } from './agent-gateway.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,31 +25,10 @@ const VERIFICATION_COMMANDS = {
     args: ['test']
   }
 };
-const DEFAULT_OPENAI_MODEL = 'gpt-5.2-mini';
 const PROTECTED_PROJECT_ROOTS = new Set([
   path.parse(process.cwd()).root.toLowerCase(),
   app.getPath('home').toLowerCase()
 ]);
-
-async function loadDotEnv() {
-  const envPath = path.resolve(process.cwd(), '.env');
-  if (!(await pathExists(envPath))) return;
-
-  const raw = await fs.readFile(envPath, 'utf-8');
-  for (const line of raw.split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-
-    const separatorIndex = trimmed.indexOf('=');
-    if (separatorIndex === -1) continue;
-
-    const key = trimmed.slice(0, separatorIndex).trim();
-    const value = trimmed.slice(separatorIndex + 1).trim().replace(/^["']|["']$/g, '');
-    if (key && process.env[key] === undefined) {
-      process.env[key] = value;
-    }
-  }
-}
 
 async function pathExists(targetPath) {
   try {
@@ -252,94 +232,6 @@ function outputLines(output) {
     .map((line) => line.trimEnd())
     .filter(Boolean)
     .slice(-80);
-}
-
-function buildOpenAiContext(payload) {
-  const project = payload?.projectSummary;
-  const thread = payload?.thread;
-  const recentMessages = Array.isArray(thread?.messages)
-    ? thread.messages.slice(-8).map((message) => `${message.role}: ${message.text}`).join('\n')
-    : 'No prior thread messages.';
-
-  return [
-    `Project: ${project?.rootPath ?? 'No project connected'}`,
-    `Phase: ${payload?.phase ?? thread?.phase ?? 'unknown'}`,
-    `Approval mode: ${payload?.approvalMode ?? 'unknown'}`,
-    `Thread title: ${thread?.title ?? 'No active thread'}`,
-    `Thread status: ${thread?.status ?? 'unknown'}`,
-    `Thread risk: ${thread?.risk ?? 'unknown'}`,
-    `Detected manifests: ${(project?.manifests ?? []).slice(0, 8).join(', ') || 'none'}`,
-    `Detected languages: ${(project?.languages ?? []).slice(0, 12).join(', ') || 'none'}`,
-    '',
-    'Recent thread messages:',
-    recentMessages
-  ].join('\n');
-}
-
-async function chatWithOpenAi(payload) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error('OPENAI_API_KEY is not set. Add it to .env or the process environment.');
-  }
-
-  const message = String(payload?.message ?? '').trim();
-  if (!message) {
-    throw new Error('Chat message is required.');
-  }
-
-  const model = process.env.OPENAI_MODEL || DEFAULT_OPENAI_MODEL;
-  const response = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model,
-      instructions: [
-        'You are AgentOS inside a local desktop app.',
-        'Help the operator plan, review, and verify software work.',
-        'Be concise, concrete, and safety-aware.',
-        'Do not claim you changed files or ran commands unless the app context explicitly says so.',
-        'When asked to perform implementation, respond with the next safe AgentOS action rather than pretending to execute it.'
-      ].join(' '),
-      input: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'input_text',
-              text: `${buildOpenAiContext(payload)}\n\nOperator message:\n${message}`
-            }
-          ]
-        }
-      ],
-      max_output_tokens: 700,
-      store: false
-    })
-  });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const detail = data?.error?.message ?? `OpenAI request failed with ${response.status}`;
-    throw new Error(detail);
-  }
-
-  const outputText = typeof data.output_text === 'string'
-    ? data.output_text
-    : Array.isArray(data.output)
-      ? data.output
-          .flatMap((item) => Array.isArray(item.content) ? item.content : [])
-          .filter((item) => item.type === 'output_text' && typeof item.text === 'string')
-          .map((item) => item.text)
-          .join('\n')
-      : '';
-
-  return {
-    text: outputText.trim() || 'OpenAI returned an empty response.',
-    model,
-    responseId: data.id ?? null
-  };
 }
 
 async function runVerificationCommand(projectRoot, command) {
