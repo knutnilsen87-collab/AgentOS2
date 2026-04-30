@@ -13,7 +13,8 @@ const agentosApi = {
   listTaskRecords: (projectRoot) => ipcRenderer.invoke('agentos:list-task-records', projectRoot),
   saveTaskRecord: (projectRoot, record) => ipcRenderer.invoke('agentos:save-task-record', projectRoot, record),
   runVerificationCommand: (projectRoot, command) => ipcRenderer.invoke('agentos:run-verification-command', projectRoot, command),
-  applyProposedPatch: (projectRoot, patch) => ipcRenderer.invoke('agentos:apply-proposed-patch', projectRoot, patch)
+  applyProposedPatch: (projectRoot, patch) => ipcRenderer.invoke('agentos:apply-proposed-patch', projectRoot, patch),
+  chatWithOpenAI: (payload) => ipcRenderer.invoke('agentos:chat-openai', payload)
 };
 
 contextBridge.exposeInMainWorld('agentos', agentosApi);

@@ -36,6 +36,12 @@ interface ProjectOpenResult {
   tasks: TaskRecord[];
 }
 
+interface OpenAiChatResult {
+  text: string;
+  model: string;
+  responseId: string | null;
+}
+
 interface AgentOsBridge {
   platform: string;
   versions: {
@@ -50,6 +56,13 @@ interface AgentOsBridge {
   saveTaskRecord: (projectRoot: string, record: TaskRecord) => Promise<string>;
   runVerificationCommand: (projectRoot: string, command: VerificationCommand) => Promise<CommandRunResult>;
   applyProposedPatch: (projectRoot: string, patch: ProposedPatch) => Promise<ProposedPatch>;
+  chatWithOpenAI: (payload: {
+    message: string;
+    phase: UiPhase;
+    approvalMode: ApprovalMode;
+    projectSummary: ProjectSummary | null;
+    thread: WorkspaceThread;
+  }) => Promise<OpenAiChatResult>;
 }
 
 declare global {
@@ -148,6 +161,7 @@ export function App() {
   const [recentTasks, setRecentTasks] = useState<TaskRecord[]>([]);
   const [thread, setThread] = useState<WorkspaceThread>(buildSeedThread(defaultPrompt, defaultApprovalMode));
   const [chatDraft, setChatDraft] = useState('');
+  const [chatSending, setChatSending] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [currentRecord, setCurrentRecord] = useState<TaskRecord | null>(null);
   const [runtimeMessage, setRuntimeMessage] = useState('Open a project to start the golden path.');
@@ -176,21 +190,41 @@ export function App() {
     }));
   }
 
-  function sendChatMessage(text = chatDraft) {
+  async function sendChatMessage(text = chatDraft) {
     const trimmed = text.trim();
-    if (!trimmed) return;
+    if (!trimmed || chatSending) return;
 
     appendChatMessage('user', trimmed);
     setChatDraft('');
+    setChatSending(true);
 
-    const lower = trimmed.toLowerCase();
-    const response = lower.includes('verify') || lower.includes('verif')
-      ? 'Message registered. Next step is verification: run a whitelisted check and keep evidence visible before done.'
-      : lower.includes('plan') || lower.includes('scope')
-        ? 'Message registered. Use the plan as the reviewable decision point before execution.'
-        : 'Message registered in this thread. This chat is local UI state for the active task.';
+    try {
+      if (!window.agentos?.chatWithOpenAI) {
+        throw new Error('OpenAI bridge is unavailable. Restart the desktop app after updating.');
+      }
 
-    appendChatMessage('agent', response, lower.includes('verify') || lower.includes('verif') ? 'verification' : 'message');
+      const result = await window.agentos.chatWithOpenAI({
+        message: trimmed,
+        phase,
+        approvalMode,
+        projectSummary,
+        thread
+      });
+      appendChatMessage('agent', result.text);
+      setRuntimeMessage(`OpenAI response received from ${result.model}.`);
+    } catch (error) {
+      const lower = trimmed.toLowerCase();
+      const fallback = lower.includes('verify') || lower.includes('verif')
+        ? 'OpenAI chat failed, but the message was registered. Next safe step is verification: run a whitelisted check and keep evidence visible before done.'
+        : lower.includes('plan') || lower.includes('scope')
+          ? 'OpenAI chat failed, but the message was registered. Use the plan as the reviewable decision point before execution.'
+          : `OpenAI chat failed: ${error instanceof Error ? error.message : 'unknown error'}`;
+
+      appendChatMessage('agent', fallback, lower.includes('verify') || lower.includes('verif') ? 'verification' : 'message');
+      setRuntimeMessage(`OpenAI chat failed: ${error instanceof Error ? error.message : 'unknown error'}`);
+    } finally {
+      setChatSending(false);
+    }
   }
 
   useEffect(() => {
@@ -704,8 +738,9 @@ export function App() {
         placeholder={placeholder}
         draft={chatDraft}
         onDraftChange={setChatDraft}
-        onSend={() => sendChatMessage()}
-        onQuickAction={(intent) => sendChatMessage(intent)}
+        onSend={() => void sendChatMessage()}
+        onQuickAction={(intent) => void sendChatMessage(intent)}
+        isSending={chatSending}
       />
 
       <RuntimeDock

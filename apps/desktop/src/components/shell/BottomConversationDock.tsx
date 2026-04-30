@@ -12,6 +12,7 @@ interface Props {
   onDraftChange: (value: string) => void;
   onSend: () => void;
   onQuickAction: (intent: string) => void;
+  isSending?: boolean;
 }
 
 export function BottomConversationDock({
@@ -24,7 +25,8 @@ export function BottomConversationDock({
   draft,
   onDraftChange,
   onSend,
-  onQuickAction
+  onQuickAction,
+  isSending = false
 }: Props) {
   const guided = profile === 'guided';
   const visibleQuickActions = guided ? quickActions.slice(0, 2) : quickActions;
@@ -69,8 +71,11 @@ export function BottomConversationDock({
           value={draft}
           onChange={(event) => onDraftChange(event.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={isSending}
         />
-        <button type="button" className="dock-send-button" onClick={onSend}>Send</button>
+        <button type="button" className="dock-send-button" onClick={onSend} disabled={isSending}>
+          {isSending ? 'Sending' : 'Send'}
+        </button>
       </div>
     </section>
   );
