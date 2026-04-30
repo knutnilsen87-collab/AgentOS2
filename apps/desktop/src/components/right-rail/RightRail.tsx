@@ -12,7 +12,7 @@ export function RightRail({ sections, projectSummary, thread, checks }: Props) {
   return (
     <aside className="right-rail-shell">
       {sections.includes('approvalCompact') ? (
-        <section className="content-card rail-card compact-rail-card">
+        <section className="content-card rail-card compact-rail-card rail-card--primary">
           <p className="eyebrow">Approval</p>
           <h3>{thread.plan?.approvalMode ?? 'edit-with-approval'}</h3>
           <p className="muted-copy">Review-first by default. Permanent changes should never feel casual.</p>
@@ -20,7 +20,7 @@ export function RightRail({ sections, projectSummary, thread, checks }: Props) {
       ) : null}
 
       {sections.includes('evidenceCompact') ? (
-        <section className="content-card rail-card compact-rail-card">
+        <section className="content-card rail-card compact-rail-card rail-card--quiet">
           <p className="eyebrow">Evidence</p>
           <h3>{projectSummary ? 'Project evidence available' : 'Waiting for project evidence'}</h3>
           <p className="muted-copy">This rail expands as work becomes riskier or more review-heavy.</p>

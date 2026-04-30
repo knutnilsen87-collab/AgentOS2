@@ -12,18 +12,19 @@ interface Props {
 
 export function TopStatusBar({ projectName, phase, approvalMode, risk, profile, onToggleProfile }: Props) {
   const riskTone = risk === 'high' ? 'danger' : risk === 'medium' ? 'warning' : 'success';
+  const showRisk = risk !== 'low';
+
   return (
     <header className="top-status-bar">
       <div>
         <p className="eyebrow">AgentOS</p>
-        <h1>Codex-style workspace on steroids</h1>
-        <p className="top-subtitle">Thread-first workflow with stronger approvals, evidence, review, and verification.</p>
+        <h1>Mission workspace</h1>
+        <p className="top-subtitle">Plan, review, verify.</p>
       </div>
       <div className="top-status-pills">
         <StatusPill tone="accent">Project: {projectName}</StatusPill>
         <StatusPill>Phase: {phase}</StatusPill>
-        <StatusPill>Approval: {approvalMode}</StatusPill>
-        <StatusPill tone={riskTone}>Risk: {risk}</StatusPill>
+        {showRisk ? <StatusPill tone={riskTone}>Risk: {risk}</StatusPill> : null}
         <button className="profile-toggle" onClick={onToggleProfile} type="button">
           {profile === 'guided' ? 'Guided mode' : 'Advanced mode'}
         </button>

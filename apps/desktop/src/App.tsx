@@ -6,6 +6,7 @@ import type {
   ProposedPatch,
   ReviewPackage,
   TaskRecord,
+  ThreadMessage,
   UiDisplayProfile,
   UiPhase,
   VerificationCheck,
@@ -146,6 +147,7 @@ export function App() {
   const [projectSummary, setProjectSummary] = useState<ProjectSummary | null>(null);
   const [recentTasks, setRecentTasks] = useState<TaskRecord[]>([]);
   const [thread, setThread] = useState<WorkspaceThread>(buildSeedThread(defaultPrompt, defaultApprovalMode));
+  const [chatDraft, setChatDraft] = useState('');
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [currentRecord, setCurrentRecord] = useState<TaskRecord | null>(null);
   const [runtimeMessage, setRuntimeMessage] = useState('Open a project to start the golden path.');
@@ -155,6 +157,41 @@ export function App() {
   const currentState = buildCurrentState(projectSummary, phase, thread);
   const placeholder = getChatPlaceholder(phase);
   const projectName = projectNameFromPath(projectSummary?.rootPath);
+  const sandboxStatus = 'Policy-gated, not OS-isolated';
+  const writePolicy = 'Review required; no silent apply';
+  const shellPolicy = 'No free shell; whitelist only';
+
+  function appendChatMessage(role: ThreadMessage['role'], text: string, kind: ThreadMessage['kind'] = 'message') {
+    const message: ThreadMessage = {
+      id: `chat-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+      role,
+      kind,
+      text,
+      createdAt: new Date().toISOString()
+    };
+
+    setThread((current) => ({
+      ...current,
+      messages: [...current.messages, message]
+    }));
+  }
+
+  function sendChatMessage(text = chatDraft) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    appendChatMessage('user', trimmed);
+    setChatDraft('');
+
+    const lower = trimmed.toLowerCase();
+    const response = lower.includes('verify') || lower.includes('verif')
+      ? 'Message registered. Next step is verification: run a whitelisted check and keep evidence visible before done.'
+      : lower.includes('plan') || lower.includes('scope')
+        ? 'Message registered. Use the plan as the reviewable decision point before execution.'
+        : 'Message registered in this thread. This chat is local UI state for the active task.';
+
+    appendChatMessage('agent', response, lower.includes('verify') || lower.includes('verif') ? 'verification' : 'message');
+  }
 
   useEffect(() => {
     let alive = true;
@@ -665,6 +702,10 @@ export function App() {
         thread={thread}
         quickActions={seedQuickActions}
         placeholder={placeholder}
+        draft={chatDraft}
+        onDraftChange={setChatDraft}
+        onSend={() => sendChatMessage()}
+        onQuickAction={(intent) => sendChatMessage(intent)}
       />
 
       <RuntimeDock
@@ -672,6 +713,9 @@ export function App() {
         nodeVersion={window.agentos?.versions.node}
         electronVersion={window.agentos?.versions.electron}
         chromeVersion={window.agentos?.versions.chrome}
+        sandboxStatus={sandboxStatus}
+        writePolicy={writePolicy}
+        shellPolicy={shellPolicy}
       />
     </div>
   );

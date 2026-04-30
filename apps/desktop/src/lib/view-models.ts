@@ -24,11 +24,11 @@ export function getCenterSectionsForPhase(phase: UiPhase, profile: UiDisplayProf
     case 'onboarding':
       return ['hero'];
     case 'projectSummary':
-      return ['hero', 'projectScanSummary'];
+      return guided ? ['hero'] : ['hero', 'projectScanSummary'];
     case 'missionCompose':
-      return guided ? ['hero', 'missionInput', 'constraints', 'projectScanSummary'] : ['hero', 'missionInput', 'constraints', 'projectScanSummary', 'thread'];
+      return guided ? ['hero', 'missionInput'] : ['hero', 'missionInput', 'constraints', 'projectScanSummary', 'thread'];
     case 'plan':
-      return ['hero', 'plan', 'thread'];
+      return guided ? ['hero', 'plan'] : ['hero', 'plan', 'thread'];
     case 'review':
       return ['hero', 'review', 'patch', 'thread'];
     case 'verification':
@@ -46,9 +46,9 @@ export function getRightRailSectionsForPhase(phase: UiPhase, profile: UiDisplayP
     case 'onboarding':
       return ['approvalCompact'];
     case 'projectSummary':
-      return ['approvalCompact', 'evidenceCompact'];
+      return ['approvalCompact'];
     case 'missionCompose':
-      return guided ? ['approvalCompact', 'evidenceCompact'] : ['approvalCompact', 'evidenceCompact', 'candidateFiles'];
+      return guided ? ['approvalCompact'] : ['approvalCompact', 'evidenceCompact', 'candidateFiles'];
     case 'plan':
       return ['approvalCompact', 'evidenceCompact', 'candidateFiles'];
     case 'review':

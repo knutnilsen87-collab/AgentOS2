@@ -5,10 +5,11 @@ import test from 'node:test';
 test('desktop app keeps approval, risk, version, and verification visible', async () => {
   const app = await readFile('apps/desktop/src/App.tsx', 'utf-8');
   const topStatus = await readFile('apps/desktop/src/components/shell/TopStatusBar.tsx', 'utf-8');
+  const rightRail = await readFile('apps/desktop/src/components/right-rail/RightRail.tsx', 'utf-8');
   const runtimeDock = await readFile('apps/desktop/src/components/shell/RuntimeDock.tsx', 'utf-8');
   const verification = await readFile('apps/desktop/src/components/thread/VerificationCard.tsx', 'utf-8');
 
-  assert(topStatus.includes('Approval: {approvalMode}'));
+  assert(rightRail.includes('Approval'));
   assert(topStatus.includes('Risk: {risk}'));
   assert(runtimeDock.includes('AgentOS: {appVersion}'));
   assert(app.includes('onMarkDone'));

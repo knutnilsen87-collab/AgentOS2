@@ -39,15 +39,15 @@ export function ProjectSidebar({ projectName, selectedTaskId, recentTasks, onNew
         </ul>
       </div>
 
-      <div className="left-rail-section">
-        <p className="rail-label">Quick access</p>
-        <ul className="simple-link-list">
+      <details className="left-rail-section workspace-tools">
+        <summary className="rail-label">Workspace tools</summary>
+        <ul className="simple-link-list quiet-link-list">
           <li>Routines</li>
           <li>Memories</li>
           <li>Policies</li>
           <li>Verification history</li>
         </ul>
-      </div>
+      </details>
     </aside>
   );
 }
