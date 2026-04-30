@@ -212,3 +212,32 @@ html[data-theme="light"] body {
 .app-shell--light {
   background: #eef0f3;
 }
+
+.app-shell--light .top-status-bar,
+.app-shell--light .left-rail,
+.app-shell--light .center-canvas,
+.app-shell--light .right-rail-shell,
+.app-shell--light .bottom-conversation-dock,
+.app-shell--light .runtime-dock,
+.app-shell--light .content-card,
+.app-shell--light .hero-card,
+.app-shell--light .constraint-strip {
+  border-color: rgba(255,255,255,0.045);
+  background: #0d1420;
+}
+
+.app-shell--light .right-rail-shell {
+  background: #0d1420;
+}
+
+.app-shell--light .bottom-conversation-dock {
+  background: #0d1420;
+}
+
+.app-shell--light .runtime-dock {
+  background: #0d1420;
+}
+
+.app-shell--light .mission-composer.content-card {
+  background: #101927;
+}
